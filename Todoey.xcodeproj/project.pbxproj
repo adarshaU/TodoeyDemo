@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C717AE2821C7BCC700BAE1D4 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C717AE2721C7BCC700BAE1D4 /* Item.swift */; };
 		C740E14321C11965000BCE9B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C740E14221C11965000BCE9B /* AppDelegate.swift */; };
 		C740E14521C11965000BCE9B /* ToDoListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C740E14421C11965000BCE9B /* ToDoListTableViewController.swift */; };
 		C740E14821C11965000BCE9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C740E14621C11965000BCE9B /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C717AE2721C7BCC700BAE1D4 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		C740E13F21C11965000BCE9B /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C740E14221C11965000BCE9B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C740E14421C11965000BCE9B /* ToDoListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListTableViewController.swift; sourceTree = "<group>"; };
@@ -55,10 +57,11 @@
 			isa = PBXGroup;
 			children = (
 				C740E14221C11965000BCE9B /* AppDelegate.swift */,
+				C740E14B21C11967000BCE9B /* LaunchScreen.storyboard */,
 				C740E14421C11965000BCE9B /* ToDoListTableViewController.swift */,
+				C717AE2721C7BCC700BAE1D4 /* Item.swift */,
 				C740E14621C11965000BCE9B /* Main.storyboard */,
 				C740E14921C11967000BCE9B /* Assets.xcassets */,
-				C740E14B21C11967000BCE9B /* LaunchScreen.storyboard */,
 				C740E14E21C11967000BCE9B /* Info.plist */,
 			);
 			path = Todoey;
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C740E14521C11965000BCE9B /* ToDoListTableViewController.swift in Sources */,
+				C717AE2821C7BCC700BAE1D4 /* Item.swift in Sources */,
 				C740E14321C11965000BCE9B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

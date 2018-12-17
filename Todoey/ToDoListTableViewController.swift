@@ -10,12 +10,39 @@ import UIKit
 
 class ToDoListTableViewController: UITableViewController {
 
-    var itemArray = ["One","two","three"]
+    var itemArray = [Item]()
     
-    
-    
+    let datafielPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        print(datafielPath)
+        
+        var newItem = Item()
+        newItem.title = "FindMike"
+        itemArray.append(newItem)
+        
+        
+        var newItem1 = Item()
+        newItem1.title = "Bug"
+        itemArray.append(newItem1)
+        
+        var newItem3 = Item()
+        newItem3.title = "Test"
+        itemArray.append(newItem3)
+        
+        var newItem2 = Item()
+        newItem2.title = "Noew"
+        itemArray.append(newItem2)
+        
+       
+        
+        
+        self.tableView.reloadData()
+        
+        
+     
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -25,14 +52,19 @@ class ToDoListTableViewController: UITableViewController {
 extension ToDoListTableViewController{
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         return itemArray.count
+        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListTableViewCell", for: indexPath)
+       
+        //let cell = UITableViewCell(style: .default, reuseIdentifier: "ToDoListTableViewCell")
+         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListTableViewCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
         
+        cell.accessoryType = itemArray[indexPath.row].done == true ? .checkmark : .none
         return cell
         
     }
@@ -41,12 +73,15 @@ extension ToDoListTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         
-        let accessoryType:UITableViewCell.AccessoryType  = (tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark) ? .none : .checkmark
-        tableView.cellForRow(at: indexPath)?.accessoryType  = accessoryType
+       itemArray[indexPath.row].done =  itemArray[indexPath.row].done == false ? true : false
+        
+        self.writeData()
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
     
+    
+   
     
     @IBAction func addAction(_ sender: UIBarButtonItem) {
         
@@ -55,8 +90,12 @@ extension ToDoListTableViewController{
         let alert = UIAlertController(title: "Add new Todaey", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            self.itemArray.append(localTextField.text!)
-            self.tableView.reloadData()
+            
+            var newItem = Item()
+            newItem.title = localTextField.text!
+            self.itemArray.append(newItem)
+            
+            self.writeData()
         }
         alert.addTextField { (textField) in
             textField.placeholder = "Create new Item"
@@ -66,5 +105,24 @@ extension ToDoListTableViewController{
         present(alert, animated: true, completion: nil)
         
     }
+
+    fileprivate func writeData() {
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(itemArray)
+            try data.write(to: datafielPath!)
+            
+        }catch{
+            print("got error")
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    
 }
+
+
+
+
 
