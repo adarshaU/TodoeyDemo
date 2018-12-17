@@ -19,27 +19,10 @@ class ToDoListTableViewController: UITableViewController {
         
         print(datafielPath)
         
-        var newItem = Item()
-        newItem.title = "FindMike"
-        itemArray.append(newItem)
+       loadItems()
         
         
-        var newItem1 = Item()
-        newItem1.title = "Bug"
-        itemArray.append(newItem1)
         
-        var newItem3 = Item()
-        newItem3.title = "Test"
-        itemArray.append(newItem3)
-        
-        var newItem2 = Item()
-        newItem2.title = "Noew"
-        itemArray.append(newItem2)
-        
-       
-        
-        
-        self.tableView.reloadData()
         
         
      
@@ -119,7 +102,20 @@ extension ToDoListTableViewController{
         self.tableView.reloadData()
     }
     
-    
+    func loadItems(){
+        
+        do{
+            let data = try Data(contentsOf: datafielPath!)
+            
+            let decoder = PropertyListDecoder()
+            
+            self.itemArray = try decoder.decode([Item].self, from: data)
+            self.tableView.reloadData()
+       
+        }catch{
+            print("Unable to load data")
+        }
+    }
 }
 
 

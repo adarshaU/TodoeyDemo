@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Item:Encodable{
+struct Item:Codable{
     
     var title = ""
     var done = false
