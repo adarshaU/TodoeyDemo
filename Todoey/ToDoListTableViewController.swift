@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class ToDoListTableViewController: UITableViewController {
+class ToDoListTableViewController: SwipeTableViewController {
 
     var realm = try! Realm()
     
@@ -35,6 +35,18 @@ class ToDoListTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    override func updateModel(at indexPath: IndexPath) {
+        //update in realm
+        if let item = todoListItems?[indexPath.row]{
+            do{
+                try realm.write {
+                   realm.delete(item)
+                }
+            }catch{
+                print("Error saving done status")
+            }
+        }
+    }
 }
 
 
@@ -48,8 +60,7 @@ extension ToDoListTableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
-        //let cell = UITableViewCell(style: .default, reuseIdentifier: "ToDoListTableViewCell")
-         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListTableViewCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = todoListItems?[indexPath.row].title ?? "No items"
         
