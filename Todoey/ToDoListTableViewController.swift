@@ -60,8 +60,20 @@ extension ToDoListTableViewController{
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let item = todoListItems?[indexPath.row]{
+            do{
+            try realm.write {
+                item.done = !item.done
+                }
+            }catch{
+                print("Error saving done status")
+            }
+        }
+        
+        tableView.reloadData()
 //        print(todoListItems?[indexPath.row])
-//        
+//
 //        todoListItems?[indexPath.row].done =  todoListItems?[indexPath.row].done == false ? true : false
         
         //self.writeData(item: todoListItems?[indexPath.row] )
