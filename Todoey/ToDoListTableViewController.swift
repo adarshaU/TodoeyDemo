@@ -91,6 +91,7 @@ extension ToDoListTableViewController{
                     try self.realm.write {
                     let newItem = Item()
                     newItem.title = localTextField.text!
+                    newItem.createdDate = Date()
                     currentCategory.items.append(newItem)
                     }
                     
@@ -132,7 +133,7 @@ extension ToDoListTableViewController{
 extension ToDoListTableViewController:UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        todoListItems = todoListItems?.filter("title CONTAINS[cd] %@",searchBar.text!).sorted(byKeyPath: "title", ascending: true)
+        todoListItems = todoListItems?.filter("title CONTAINS[cd] %@",searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
         
     }
