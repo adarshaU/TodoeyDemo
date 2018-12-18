@@ -90,32 +90,21 @@ extension ToDoListTableViewController{
     }
 
     fileprivate func writeData() {
-        let encoder = PropertyListEncoder()
-        do{
-            let data = try encoder.encode(itemArray)
-            try data.write(to: datafielPath!)
-            
-        }catch{
-            print("got error")
-        }
-        
-        self.tableView.reloadData()
+//        let encoder = PropertyListEncoder()
+//        do{
+//            let data = try encoder.encode(itemArray)
+//            try data.write(to: datafielPath!)
+//
+//        }catch{
+//            print("got error")
+//        }
+//
+//        self.tableView.reloadData()
     }
     
     func loadItems(){
         
-        do{
-            let data = try Data(contentsOf: datafielPath!)
-            
-            let decoder = PropertyListDecoder()
-            
-            self.itemArray = try decoder.decode([Item].self, from: data)
-            self.tableView.reloadData()
-       
-        }catch{
-            print("Unable to load data")
-        }
-    }
+     }
 }
 
 
