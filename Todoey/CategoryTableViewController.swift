@@ -14,17 +14,17 @@ class CategoryTableViewController: UITableViewController {
     let realm = try! Realm()
     
     
-    var categories = [Category]()
+    var categories:Results<Category>?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        loadCategories()
+    }
+    
+    func loadCategories(){
+         categories = realm.objects(Category.self)
+         tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -36,13 +36,13 @@ class CategoryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return categories.count
+        return categories?.count ?? 1
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryTableViewCell", for: indexPath)
-        cell.textLabel?.text = categories[indexPath.row].name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories addded"
         
         return cell
     }
@@ -51,6 +51,16 @@ class CategoryTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         performSegue(withIdentifier: "goToItems", sender: self)
+        
+    }
+    
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinactionVC = segue.destination as! ToDoListTableViewController
+       
+        if let indexpath = tableView.indexPathForSelectedRow {
+            destinactionVC.selectedCategory = categories?[indexpath.row]
+        }
         
     }
     
@@ -77,7 +87,6 @@ class CategoryTableViewController: UITableViewController {
             
             let newCategory = Category()
             newCategory.name = localTextField.text!
-            self.categories.append(newCategory)
             
             self.writeData(category: newCategory)
         }

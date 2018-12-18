@@ -7,26 +7,32 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ToDoListTableViewController: UITableViewController {
 
-    var itemArray = [Item]()
+    var realm = try! Realm()
+    
+    var todoListItems:Results<Item>?
+    
+    var selectedCategory:Category?{
+        didSet{
+            loadItems()
+        }
+    }
     
     let datafielPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         print(datafielPath)
-        
-       loadItems()
-        
-        
-        
-        
-        
-     
+       
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    
+    func loadItems(){
+        todoListItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        tableView.reloadData()
     }
     
 }
@@ -36,7 +42,7 @@ extension ToDoListTableViewController{
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return itemArray.count
+        return todoListItems?.count ?? 1
         
     }
     
@@ -45,20 +51,21 @@ extension ToDoListTableViewController{
         //let cell = UITableViewCell(style: .default, reuseIdentifier: "ToDoListTableViewCell")
          let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListTableViewCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row].title
+        cell.textLabel?.text = todoListItems?[indexPath.row].title ?? "No items"
         
-        cell.accessoryType = itemArray[indexPath.row].done == true ? .checkmark : .none
+        cell.accessoryType = todoListItems?[indexPath.row].done == true ? .checkmark : .none
         return cell
         
     }
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
+//        print(todoListItems?[indexPath.row])
+//        
+//        todoListItems?[indexPath.row].done =  todoListItems?[indexPath.row].done == false ? true : false
         
-       itemArray[indexPath.row].done =  itemArray[indexPath.row].done == false ? true : false
+        //self.writeData(item: todoListItems?[indexPath.row] )
         
-        self.writeData()
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -69,16 +76,26 @@ extension ToDoListTableViewController{
     @IBAction func addAction(_ sender: UIBarButtonItem) {
         
         var localTextField = UITextField()
-        
-        let alert = UIAlertController(title: "Add new Todaey", message: "", preferredStyle: .alert)
-        
+        let alert = UIAlertController(title: "Add new Today", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
-            var newItem = Item()
-            newItem.title = localTextField.text!
-            self.itemArray.append(newItem)
+            if let currentCategory = self.selectedCategory{
             
-            self.writeData()
+                
+                do{
+                    try self.realm.write {
+                    let newItem = Item()
+                    newItem.title = localTextField.text!
+                    currentCategory.items.append(newItem)
+                    }
+                    
+                }catch let error{
+                    print(error.localizedDescription)
+                }
+            }
+            
+            self.tableView.reloadData()
+           
         }
         alert.addTextField { (textField) in
             textField.placeholder = "Create new Item"
@@ -86,26 +103,21 @@ extension ToDoListTableViewController{
         }
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
-        
     }
 
-    fileprivate func writeData() {
-//        let encoder = PropertyListEncoder()
-//        do{
-//            let data = try encoder.encode(itemArray)
-//            try data.write(to: datafielPath!)
-//
-//        }catch{
-//            print("got error")
-//        }
-//
-//        self.tableView.reloadData()
-    }
     
-    func loadItems(){
-        
-     }
-}
+//    fileprivate func writeData(item:Item) {
+//        do{
+//           try realm.write {
+//                realm.add(item)
+//                }
+//
+//            }catch let error {
+//                print("Error:\(error.localizedDescription)")
+//            }
+//            self.tableView.reloadData()
+//        }
+    }
 
 
 

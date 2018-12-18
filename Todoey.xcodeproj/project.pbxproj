@@ -89,9 +89,9 @@
 				C740E14421C11965000BCE9B /* ToDoListTableViewController.swift */,
 				C74E5E3221C8D17F00041854 /* CategoryTableViewController.swift */,
 				C717AE2721C7BCC700BAE1D4 /* Item.swift */,
-				C74E5E3021C8CF5900041854 /* Category.swift */,
 				C740E14621C11965000BCE9B /* Main.storyboard */,
 				C740E14921C11967000BCE9B /* Assets.xcassets */,
+				C74E5E3021C8CF5900041854 /* Category.swift */,
 				C740E14E21C11967000BCE9B /* Info.plist */,
 			);
 			path = Todoey;
