@@ -60,11 +60,11 @@ extension ToDoListTableViewController{
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        //delete in realm
         if let item = todoListItems?[indexPath.row]{
             do{
             try realm.write {
-                item.done = !item.done
+                realm.delete(item)
                 }
             }catch{
                 print("Error saving done status")
