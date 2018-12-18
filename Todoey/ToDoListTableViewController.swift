@@ -60,24 +60,17 @@ extension ToDoListTableViewController{
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //delete in realm
+        //update in realm
         if let item = todoListItems?[indexPath.row]{
             do{
             try realm.write {
-                realm.delete(item)
+                item.done = !item.done
                 }
             }catch{
                 print("Error saving done status")
             }
         }
-        
         tableView.reloadData()
-//        print(todoListItems?[indexPath.row])
-//
-//        todoListItems?[indexPath.row].done =  todoListItems?[indexPath.row].done == false ? true : false
-        
-        //self.writeData(item: todoListItems?[indexPath.row] )
-        
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -134,4 +127,23 @@ extension ToDoListTableViewController{
 
 
 
+
+
+extension ToDoListTableViewController:UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        todoListItems = todoListItems?.filter("title CONTAINS[cd] %@",searchBar.text!).sorted(byKeyPath: "title", ascending: true)
+        tableView.reloadData()
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+        loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
 
