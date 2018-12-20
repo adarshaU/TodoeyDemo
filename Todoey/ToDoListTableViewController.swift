@@ -8,10 +8,12 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class ToDoListTableViewController: SwipeTableViewController {
 
     var realm = try! Realm()
+    @IBOutlet weak var searchbaroutlet: UISearchBar!
     
     var todoListItems:Results<Item>?
     
@@ -25,8 +27,39 @@ class ToDoListTableViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print(datafielPath)
-       
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        tableView.separatorStyle = .none
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        title = selectedCategory!.name
+        if let color = selectedCategory?.cellBackgroundColor{
+            
+            guard let navbar = navigationController?.navigationBar else{
+                return
+            }
+            if let navBarColor = UIColor(hexString: color){
+                
+                navbar.barTintColor = navBarColor
+                navbar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor:ContrastColorOf(navBarColor, returnFlat: true)]
+                
+                searchbaroutlet.barTintColor = navBarColor
+            }
+        }
+    }
+    
+    //to avoide overlapping the current color on navbar on pressing back button into home screen
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        guard let originalcolor = UIColor(hexString: "1D9B76") else{
+            fatalError()
+        }
+        navigationController?.navigationBar.barTintColor = originalcolor
+        navigationController?.navigationBar.tintColor = FlatWhite()
+         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor:FlatWhite()]
+        
     }
     
     
@@ -64,7 +97,13 @@ extension ToDoListTableViewController{
         
         cell.textLabel?.text = todoListItems?[indexPath.row].title ?? "No items"
         
-        cell.accessoryType = todoListItems?[indexPath.row].done == true ? .checkmark : .none
+        if let color = UIColor(hexString: selectedCategory!.cellBackgroundColor)?.darken(byPercentage:  CGFloat(indexPath.row) / CGFloat((todoListItems!.count))){
+            cell.backgroundColor = color
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+        }
+        
+        
+         cell.accessoryType = todoListItems?[indexPath.row].done == true ? .checkmark : .none
         return cell
         
     }
